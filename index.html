@@ -31,38 +31,39 @@
   <h3>Translation:</h3>
   <div id="outputText"></div>
 
-  <script>
-   async function translateText() {
-  const text = document.getElementById("inputText").value;
-  const targetLang = document.getElementById("targetLang").value;
+ <script>
+  async function translateText() {
+    const text = document.getElementById("inputText").value;
+    const targetLang = document.getElementById("targetLang").value;
 
-  if (!text.trim()) {
-    document.getElementById("outputText").innerText = "Please enter some text.";
-    return;
+    if (!text.trim()) {
+      document.getElementById("outputText").innerText = "Please enter some text.";
+      return;
+    }
+
+    try {
+      const response = await fetch("https://api.codetabs.com/v1/proxy?quest=https://translate.mentality.rip/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          q: text,
+          source: "auto",
+          target: targetLang,
+          format: "text"
+        })
+      });
+
+      const data = await response.json();
+      document.getElementById("outputText").innerText = data.translatedText;
+    } catch (error) {
+      document.getElementById("outputText").innerText = "Translation failed. Check your internet connection.";
+      console.error("Translation error:", error);
+    }
   }
-
-  try {
-   const response = await fetch("https://api.codetabs.com/v1/proxy?quest=https://translate.mentality.rip/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        q: text,
-        source: "auto",
-        target: targetLang,
-        format: "text"
-      })
-    });
-
-    const data = await response.json();
-    document.getElementById("outputText").innerText = data.translatedText;
-  } catch (error) {
-    document.getElementById("outputText").innerText = "Translation failed. Check your internet connection.";
-    console.error("Translation error:", error);
-  }
-}
-  </script>
+</script>
 </body>
 
 </html>
+
 
 
